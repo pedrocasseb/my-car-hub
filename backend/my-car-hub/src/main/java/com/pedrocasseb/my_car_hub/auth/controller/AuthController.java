@@ -1,0 +1,39 @@
+package com.pedrocasseb.my_car_hub.auth.controller;
+
+import com.pedrocasseb.my_car_hub.auth.dto.request.UserLoginRequest;
+import com.pedrocasseb.my_car_hub.auth.dto.response.UserLoginResponse;
+import com.pedrocasseb.my_car_hub.auth.service.AuthService;
+import com.pedrocasseb.my_car_hub.auth.dto.request.UserRegisterRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(
+            @RequestBody UserRegisterRequest request
+            ) {
+        authService.register(request);
+        return ResponseEntity.ok("Usuário Criado com Sucesso");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+        UserLoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/test")
+    public String test(Authentication auth) {
+        if (auth == null) {
+            return "NULL (não autenticado)";
+        }
+        return auth.getName();
+    }
+}

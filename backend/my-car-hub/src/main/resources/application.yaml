@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: my-car-hub
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mycarhub
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: oafisnoaisfjap93j1asgsuaignapisbibqpasdAGONIPWON94ju32th05142135665321fdshhfshgsdvsfashjgfaoslpnbjasknfa
+  expiration: 86400000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
