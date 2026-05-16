@@ -11,26 +11,32 @@ import { useEffect, useState } from "react";
 export function Navbar() {
     const router = useRouter();
 
-    const [mounted, setMounted] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        const updateAuth = () => {
+            const token = localStorage.getItem("token");
+
+            setIsLogged(!!token);
+        };
+
+        updateAuth();
+
+        window.addEventListener("auth-change", updateAuth);
+
+        return () => {
+            window.removeEventListener("auth-change", updateAuth);
+        };
     }, []);
-
-    if (!mounted) {
-        return null;
-    }
-
-    const isLogged = !!localStorage.getItem("token");
 
     function handleLogout() {
         localStorage.removeItem("token");
 
         localStorage.removeItem("user");
 
-        router.push("/login");
+        window.dispatchEvent(new Event("auth-change"));
 
-        router.refresh();
+        router.replace("/login");
     }
 
     return (

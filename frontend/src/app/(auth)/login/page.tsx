@@ -7,18 +7,32 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../../public/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            router.replace("/");
+            return;
+        }
+
+        setCheckingAuth(false);
+    }, [router]);
 
     async function handleLogin() {
         setEmailError("");
@@ -38,6 +52,7 @@ export default function Login() {
 
         if (password.length > 0 && password.length < 6) {
             setPasswordError("Password must contain at least 6 characters");
+
             hasError = true;
         }
 
@@ -80,12 +95,22 @@ export default function Login() {
 
             localStorage.setItem("user", JSON.stringify(data));
 
-            router.push("/");
+            window.dispatchEvent(new Event("auth-change"));
+
+            window.dispatchEvent(new Event("auth-change"));
+
+            setTimeout(() => {
+                router.replace("/");
+            }, 0);
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false);
         }
+    }
+
+    if (checkingAuth) {
+        return null;
     }
 
     return (
@@ -94,6 +119,7 @@ export default function Login() {
 
             <div className="relative z-10 flex flex-col items-center">
                 <Image src={Logo} alt="My Car Hub" className="w-14 mb-13" />
+
                 <h1 className="text-2xl font-semibold">Log in My Car Hub</h1>
 
                 <div className="flex flex-col gap-4 min-w-70 mt-10">
@@ -104,12 +130,14 @@ export default function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+
                         {emailError && (
                             <p className="text-[#ff6463] text-xs">
                                 {emailError}
                             </p>
                         )}
                     </div>
+
                     <div className="flex flex-col gap-1">
                         <Input
                             placeholder="Password"
@@ -118,12 +146,14 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+
                         {passwordError && (
                             <p className="text-[#ff6463] text-xs">
                                 {passwordError}
                             </p>
                         )}
                     </div>
+
                     <Button onClick={handleLogin} disabled={loading}>
                         {loading ? "Logging in..." : "Log in"}
                     </Button>
@@ -132,7 +162,9 @@ export default function Login() {
                 <Link
                     href="/register"
                     className={
-                        buttonVariants({ variant: "outline" }) +
+                        buttonVariants({
+                            variant: "outline",
+                        }) +
                         " group min-w-70 mt-10 text-zinc-400 hover:text-white"
                     }
                 >

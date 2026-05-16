@@ -7,10 +7,12 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../../public/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,6 +23,17 @@ export default function Register() {
     const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            router.replace("/");
+            return;
+        }
+
+        setCheckingAuth(false);
+    }, [router]);
 
     async function handleRegister() {
         setUsernameError("");
@@ -88,14 +101,20 @@ export default function Register() {
             localStorage.setItem("token", data.token);
 
             localStorage.setItem("user", JSON.stringify(data));
+            window.dispatchEvent(new Event("auth-change"));
 
-            router.push("/");
-            router.refresh();
+            setTimeout(() => {
+                router.replace("/");
+            }, 0);
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false);
         }
+    }
+
+    if (checkingAuth) {
+        return null;
     }
 
     return (
