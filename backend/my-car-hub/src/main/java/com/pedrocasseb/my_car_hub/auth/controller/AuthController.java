@@ -34,6 +34,8 @@ public class AuthController {
         if (auth == null) {
             return "NULL (não autenticado)";
         }
-        return auth.getName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Usuario: ").append(auth.getName()).append("\n").append("Logado com Sucesso");
+        return sb.toString();
     }
 }
