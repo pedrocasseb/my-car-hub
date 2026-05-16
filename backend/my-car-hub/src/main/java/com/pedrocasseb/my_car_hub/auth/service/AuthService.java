@@ -19,6 +19,11 @@ public class AuthService {
     private final JwtService jwtService;
 
     public void register(UserRegisterRequest request) {
+
+        if(userRepository.existsByUsername(request.getUsername())) {
+            throw new BusinessException("Username já cadastrado");
+        }
+
         if(userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException("Email já cadastrado");
         }

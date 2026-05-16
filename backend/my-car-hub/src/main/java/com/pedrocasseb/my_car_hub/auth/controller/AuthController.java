@@ -4,6 +4,7 @@ import com.pedrocasseb.my_car_hub.auth.dto.request.UserLoginRequest;
 import com.pedrocasseb.my_car_hub.auth.dto.response.UserLoginResponse;
 import com.pedrocasseb.my_car_hub.auth.service.AuthService;
 import com.pedrocasseb.my_car_hub.auth.dto.request.UserRegisterRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,14 +18,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(
-            @RequestBody UserRegisterRequest request
+            @Valid @RequestBody UserRegisterRequest request
             ) {
         authService.register(request);
         return ResponseEntity.ok("Usuário Criado com Sucesso");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
         UserLoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
