@@ -18,7 +18,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public void register(UserRegisterRequest request) {
+    public UserLoginResponse register(UserRegisterRequest request) {
 
         if(userRepository.existsByUsername(request.getUsername())) {
             throw new BusinessException("Username já cadastrado");
@@ -35,6 +35,18 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        UserLoginResponse response =
+                new UserLoginResponse();
+
+        response.setToken(token);
+        response.setUserId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+
+        return response;
     }
 
     public UserLoginResponse login(UserLoginRequest request) {

@@ -82,7 +82,15 @@ export default function Register() {
 
                 return;
             }
+
+            const data = await response.json();
+
+            localStorage.setItem("token", data.token);
+
+            localStorage.setItem("user", JSON.stringify(data));
+
             router.push("/");
+            router.refresh();
         } catch (error) {
             console.error(error);
         } finally {
