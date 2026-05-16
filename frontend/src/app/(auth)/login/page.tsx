@@ -5,6 +5,12 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../../public/logo.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Login - My Car Hub",
+    description: "Log in to your My Car Hub account.",
+};
 
 export default function Login() {
     return (

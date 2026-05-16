@@ -5,6 +5,12 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../../public/logo.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Register - My Car Hub",
+    description: "Create a new My Car Hub account.",
+};
 
 export default function Register() {
     return (
